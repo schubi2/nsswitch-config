@@ -1,0 +1,5 @@
+# options for meson build system
+
+option('vendordir',
+       type: 'string',
+       description : 'Directory for distribution provided configuration files')
