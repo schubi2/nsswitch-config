@@ -58,8 +58,8 @@ static void usage(void)
     fprintf(stderr, "                      default: -none-\n");
 #endif
     fprintf(stderr, "--etcdir <string>:    Directory for user changed configuration files (default: /etc).\n");    
-    fprintf(stderr, "--output <string>:    Path of generated nsswitch.conf file (default: /etc/nsswitch.conf\n");
-    fprintf(stderr, "--verbos>:            Generates additional information in output file.\n");    
+    fprintf(stderr, "--output <string>:    Path of generated nsswitch.conf file (default: /etc/nsswitch.conf).\n");
+    fprintf(stderr, "--verbose:            Generates additional information in output file.\n");
 }
 
 /**
@@ -110,7 +110,7 @@ int main (int argc, char *argv[])
 	    output_file = optarg;
             break;
         case 'l':
- 	    verbose = 0;
+            verbose = 1;
             break;	    
         case 'h':
             usage();
@@ -214,7 +214,7 @@ int main (int argc, char *argv[])
 	    if (econf_error == ECONF_SUCCESS &&
 		add_ext_value->comment_before_key != NULL &&
 		strlen(add_ext_value->comment_before_key) > 0) {
-	        if (econf_getExtValue(key_file_list[i], NULL, keys[k], &ext_value)) {
+	        if (econf_getExtValue(output_key_file, NULL, keys[k], &ext_value) == ECONF_SUCCESS) {
 		    if (ext_value->comment_before_key == NULL) {
 			ext_value->comment_before_key = strdup(add_ext_value->comment_before_key);
 		    } else {
@@ -223,6 +223,7 @@ int main (int argc, char *argv[])
 		            ret = ECONF_NOMEM;
 			    print_error(econf_error);			    
  	                    econf_freeExtValue(add_ext_value);
+			    econf_freeExtValue(ext_value);
 		            econf_free(keys);
 		            goto cleanup;
 			} else {
@@ -231,6 +232,7 @@ int main (int argc, char *argv[])
 			}
 		    }
 		    econf_error = econf_setExtValue(output_key_file, NULL, keys[k], ext_value);
+		    econf_freeExtValue(ext_value);
 		}
 	    }
 	}
