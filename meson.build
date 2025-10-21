@@ -56,7 +56,7 @@ libeconf_dep = dependency('libeconf')
 executable('nsswitch-config', nsswitch_config_src, dependencies : libeconf_dep, install : true, )
 
 # Unit tests
-#subdir('tests')
+subdir('tests')
 
 # documentation
 #subdir('doc')

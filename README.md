@@ -20,6 +20,13 @@
 			
 #### Installation:
 ```
+# cd <builddir>
 # meson install
+```
+
+#### Test:
+```
+# cd <builddir>
+# meson test
 ```
 
