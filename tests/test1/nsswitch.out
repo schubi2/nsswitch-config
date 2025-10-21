@@ -1,0 +1,9 @@
+# comment #1 10-foo.conf/passwd
+# comment #2 10-foo.conf/passwd
+# comment #1 20-bar.conf/passwd
+# comment #1 30-bar2.conf/passwd
+# comment #1 40-bar3.conf/passwd
+passwd:files systemd [succcess=merge] usrfiles
+# comment #1 10-foo.conf/group
+# comment #1 20-bar.conf/group
+group:dns [!UNAVAIL=return] files
