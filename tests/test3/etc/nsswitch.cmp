@@ -49,25 +49,26 @@
 # passwd:    db files
 # shadow:    db files
 # group:     db files
-
-passwd:		compat
-group:		compat
-shadow:		compat
+# comment #1 usr/share/nsswitch.conf.d/10-foo.conf/passwd
+# comment #2 usr/share/nsswitch.conf.d/10-foo.conf/passwd
+# comment #1 etc/nsswitch.conf.d/20-bar.conf/passwd
+passwd:compat 10_usr_share 20_etc [succcess=merge]
+# comment #1 usr/share/nsswitch.conf.d/10-foo.conf/group
+# comment #1 etc/nsswitch.conf.d/20-bar.conf/group
+group:compat 10_usr_share [!UNAVAIL=return] 20_etc
+shadow:compat
 # Allow initgroups to default to the setting for group.
 # initgroups:	compat
-
-hosts:  	files mdns_minimal [NOTFOUND=return] dns
-networks:	files dns
-
-aliases:	files usrfiles
-ethers:		files usrfiles
-gshadow:	files usrfiles
-netgroup:	files
-protocols:	files usrfiles
-publickey:	files
-rpc:		files usrfiles
-services:	files usrfiles
-
-automount:	files
-bootparams:	files
-netmasks:	files
+hosts:files mdns_minimal [NOTFOUND=return] dns
+networks:files dns
+aliases:files usrfiles
+ethers:files usrfiles
+gshadow:files usrfiles
+netgroup:files
+protocols:files usrfiles
+publickey:files
+rpc:files usrfiles
+services:files usrfiles
+automount:files
+bootparams:files
+netmasks:files
