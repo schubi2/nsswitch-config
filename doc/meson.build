@@ -1,0 +1,1 @@
+install_man('man/nsswitch-config.8')

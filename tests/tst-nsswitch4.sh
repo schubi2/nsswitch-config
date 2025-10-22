@@ -9,9 +9,9 @@ if ! [[ -f "$nsswitch-config_exe" ]]; then
         exit 1
     fi
 fi
-nsswitch_config_root="$PWD/../../tests/test3"
+nsswitch_config_root="$PWD/../../tests/test4"
 if ! [[ -d "$nsswitch_config_root" ]]; then
-    nsswitch_config_root="$PWD/../tests/test3"
+    nsswitch_config_root="$PWD/../tests/test4"
     if ! [[ -d "$nsswitch_config_root" ]]; then
         echo "Couldn't find $nsswitch_onfig_root"
         exit 1
@@ -26,9 +26,6 @@ file2=$nsswitch_config_root/etc/nsswitch.cmp
 if cmp -s "$file1" "$file2"; then
     printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
     rm $file1
-    if [ -f "$file1.nsswitch-config-sav" ]; then
-        mv $file1.nsswitch-config-sav $file1
-    fi
     exit 0
 else
     printf 'The file "%s" is different from "%s"\n' "$file1" "$file2"

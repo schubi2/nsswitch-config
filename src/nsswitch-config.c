@@ -51,7 +51,7 @@ static void usage(void)
 {
     fprintf(stderr, "Usage: %s [OPTIONS]\n\n", PROGRAM_NAME);
     fprintf(stderr, "\ngeneral Options:\n");
-    fprintf(stderr, "--vendordir <string>: Directory for vendor specific configuration files (e.g. /usr/lib).\n");
+    fprintf(stderr, "--vendordir <string>: Directory for vendor specific configuration files (e.g. /usr/share).\n");
 #ifdef VENDORDIR
     fprintf(stderr, "                      default: %s\n", VENDORDIR);
 #else
@@ -59,7 +59,7 @@ static void usage(void)
 #endif
     fprintf(stderr, "--etcdir <string>:    Directory for user changed configuration files (default: /etc).\n");    
     fprintf(stderr, "--output <string>:    Path of generated nsswitch.conf file (default: /etc/nsswitch.conf).\n");
-    fprintf(stderr, "--verbose:            Generates additional information in output file.\n");
+    fprintf(stderr, "--verbose:            Generates additional information.\n");
 }
 
 /**
@@ -169,7 +169,7 @@ int main (int argc, char *argv[])
         size_t key_count = 0;
 
 	if (strlen(path) > 0 && verbose) {
-	    fprintf(stderr, "Evaluating: %s\n\n", path);
+	    fprintf(stderr, "Evaluating: %s\n", path);
 	    free(path);	    
 	}
 
@@ -209,7 +209,14 @@ int main (int argc, char *argv[])
             if (econf_error == ECONF_NOKEY) {
 	        econf_error = econf_setStringValue(output_key_file, NULL, keys[k], add_value);
 	    } else if (econf_error == ECONF_SUCCESS) {
-	        if (strstr(value, add_value) == NULL) {
+		char *token, *str, *tofree;
+		int found = 0;
+		tofree = str = strdup(value);
+		while ((token = strsep(&str, " \t\n")))
+			if (strcmp(token, add_value) == 0) found = 1;;
+		free(tofree);
+
+	        if (found == 0) {
 		   /* value is not in list */
 		   char *new_value = NULL;
 		   if (asprintf(&new_value, "%s %s", value, add_value) <0) {
@@ -255,6 +262,10 @@ int main (int argc, char *argv[])
 	    }
 	}
 	econf_free(key_file_list[i]);
+    }
+
+    if (verbose) {
+	fprintf(stderr, "Writing: %s\n", output_file);
     }
 
     econf_error = econf_writeFile(output_key_file, dirname(output_file), basename(output_file));

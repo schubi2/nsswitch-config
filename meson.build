@@ -59,4 +59,4 @@ executable('nsswitch-config', nsswitch_config_src, dependencies : libeconf_dep, 
 subdir('tests')
 
 # documentation
-#subdir('doc')
+subdir('doc')
