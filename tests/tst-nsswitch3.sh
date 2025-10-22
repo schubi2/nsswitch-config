@@ -26,7 +26,7 @@ file2=$nsswitch_config_root/etc/nsswitch.cmp
 if cmp -s "$file1" "$file2"; then
     printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
     rm $file1
-    if ! [[ -f "$file1.nsswitch-config-sav" ]]; then    
+    if [ -f "$file1.nsswitch-config-sav" ]; then
         mv $file1.nsswitch-config-sav $file1
     fi
     exit 0
