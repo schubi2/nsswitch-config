@@ -123,6 +123,24 @@ int main (int argc, char *argv[])
         }
     }
 
+    /* Saving old file */
+    if (access(output_file, F_OK) == 0) {
+        char *dest = NULL;
+	if (asprintf(&dest, "%s.nsswitch-config-sav", output_file) <0) {
+	   ret = ECONF_NOMEM;
+	   print_error(econf_error);
+	   return -1;
+	}
+	if (access(dest, F_OK) == 0)
+ 	   remove(dest);
+
+	if (rename(output_file, dest) != 0) {
+  	   fprintf(stderr, "Cannot move %s to %s\n", output_file, dest);
+	   return -1;
+	}
+	free(dest);	
+    }
+
     econf_error = econf_newKeyFile( &output_key_file,
 				    ':', /* DELIMITERS */
 				    '#'  /* COMMENT */);
@@ -196,7 +214,7 @@ int main (int argc, char *argv[])
 		   char *new_value = NULL;
 		   if (asprintf(&new_value, "%s %s", value, add_value) <0) {
 		      ret = ECONF_NOMEM;
-		      print_error(econf_error);		      
+		      print_error(econf_error);
 		      free(value);
 		      free(add_value);
 		      econf_freeExtValue(add_ext_value);
