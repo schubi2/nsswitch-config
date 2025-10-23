@@ -10,6 +10,7 @@ type sudo >/dev/null 2>&1 && sudo=sudo || sudo=
 packages="
 meson
 valgrind
+libeconf
 $CC"
 
 retry_if_failed()
