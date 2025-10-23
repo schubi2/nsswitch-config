@@ -78,17 +78,17 @@ e.g. /etc/nsswitch.conf, the output file will NOT be parsed/merged.
 
 ### general OPTIONS
 
---vendordir <string>
+--vendordir \<string\> :
   Directory for vendor specific configuration files (e.g. /usr/share).
   default: -none-
 
---etcdir <string>
+--etcdir \<string\> :
   Directory for user changed configuration files (default: /etc).
 
---output <string>
+--output \<string\> :
   Path of generated nsswitch.conf file (default: /etc/nsswitch.conf).
 
---verbose
+--verbose :
   Generates additional information.
 
 ### Building nsswitch-config
