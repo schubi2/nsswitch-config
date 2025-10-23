@@ -104,10 +104,10 @@ e.g. /etc/nsswitch.conf, the output file will NOT be parsed/merged.
 # meson compile
 ```
 
-##MESON-OPTIONS:
+##### MESON-OPTIONS
 
--Dvendordir=<DIR>	Directory for distribution provided configuration files
-			(e.g. "/usr/share")
+-Dvendordir=\<DIR\> :
+Directory for distribution provided configuration files	(e.g. "/usr/share").
 			
 #### Installation:
 ```
