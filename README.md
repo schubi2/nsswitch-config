@@ -15,47 +15,59 @@ Files will be managed in following order:
 * /usr/share/nsswitch.conf
 
   Content:
-  > # comment for /usr/share/nsswitch.conf
-  > hosts: files
+  ```
+  # comment for /usr/share/nsswitch.conf
+  hosts: files
+  ```
 
 * /usr/share/nsswitch.conf.d/10-mdns.conf
 
   Content:
-  > # comment for /usr/share/nsswitch.conf.d/10-mdns.conf
-  > hosts: mdns_minimal [NOTFOUND=return]
+  ```
+  # comment for /usr/share/nsswitch.conf.d/10-mdns.conf
+  hosts: mdns_minimal [NOTFOUND=return]
+  ```
 
 * /etc/nsswitch.conf.d/20-compat.conf
 
   Content:
-  > # comment for /etc/nsswitch.conf.d/20-compat.conf
-  > passwd:         compat
-  > group:          compat
-  > shadow:         compat
+  ```
+  # comment for /etc/nsswitch.conf.d/20-compat.conf
+  passwd:         compat
+  group:          compat
+  shadow:         compat
+  ```
 
 * /usr/share/nsswitch.conf.d/30-dns.conf
 
   Content:
-  > # comment for /usr/share/nsswitch.conf.d/30-dns.conf
-  > hosts: dns
+  ```
+  # comment for /usr/share/nsswitch.conf.d/30-dns.conf
+  hosts: dns
+  ```
 
 * /etc/nsswitch.conf.d/40-dns.conf
 
   Content:
-  > # comment for etc/nsswitch.conf.d/40-dns.conf (no double entry)
-  > hosts: dns
-
+  ```
+  # comment for etc/nsswitch.conf.d/40-dns.conf (no double entry)
+  hosts: dns
+  ```
+  
 Generates /etc/nsswitch.conf with following content:
 
-  > # comment for /usr/share/nsswitch.conf
-  > # comment for /usr/share/nsswitch.conf.d/10-mdns.conf
-  > # comment for /usr/share/nsswitch.conf.d/30-dns.conf
-  > # comment for etc/nsswitch.conf.d/40-dns.conf (no double entry)
-  > hosts:files mdns_minimal [NOTFOUND=return] dns
-  > # comment nr.1 for /etc/nsswitch.conf.d/20-compat.conf
-  > # comment nr.2 for /etc/nsswitch.conf.d/20-compat.conf
-  > passwd:compat
-  > group:compat
-  > shadow:compat
+```
+# comment for /usr/share/nsswitch.conf
+# comment for /usr/share/nsswitch.conf.d/10-mdns.conf
+# comment for /usr/share/nsswitch.conf.d/30-dns.conf
+# comment for etc/nsswitch.conf.d/40-dns.conf (no double entry)
+hosts:files mdns_minimal [NOTFOUND=return] dns
+# comment nr.1 for /etc/nsswitch.conf.d/20-compat.conf
+# comment nr.2 for /etc/nsswitch.conf.d/20-compat.conf
+passwd:compat
+group:compat
+shadow:compat
+```
 
 Before writing /etc/nsswitch.conf a copy will be generated:
 /etc/nsswitch.conf.nsswitch-config-sav
