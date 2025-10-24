@@ -1,7 +1,7 @@
 ## nsswitch-config
 
 Tool which merges different nsswitch configuration file snippets into one single
-nsswitch.conf file, which is normally located in the /etc directory.
+nsswitch.conf file. This file is located in the /etc directory.
 
 The program parses different configurations files with the order defined by the
 UAPI group:
