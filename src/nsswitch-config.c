@@ -34,15 +34,11 @@
 #define PROGRAM_NAME "nsswitch-config"
 #define COMMENT "#"
 #define DELIMITERS ":"
+#define VENDORDIR "/usr/share"
 
 static char *output_file = "/etc/nsswitch.conf"; /* output of all merged files */
 static char *etc_dir = "/etc"; /* output of all merged files */
-#ifdef VENDORDIR
-static char *vendor_dir = VENDORDIR
-#else
-static char *vendor_dir = NULL;
-#endif
-
+static char *vendor_dir = VENDORDIR;
 
 /**
  * @brief Shows the usage.
@@ -126,6 +122,7 @@ int main (int argc, char *argv[])
     /* Saving old file */
     if (access(output_file, F_OK) == 0) {
         char *dest = NULL;
+
 	if (asprintf(&dest, "%s.nsswitch-config-sav", output_file) <0) {
 	   ret = ECONF_NOMEM;
 	   print_error(econf_error);
@@ -136,6 +133,7 @@ int main (int argc, char *argv[])
 
 	if (rename(output_file, dest) != 0) {
   	   fprintf(stderr, "Cannot move %s to %s\n", output_file, dest);
+	   free(dest);
 	   return -1;
 	}
 	free(dest);	
@@ -162,16 +160,16 @@ int main (int argc, char *argv[])
 	ret = -1;
 	goto cleanup;	    
     }
-    
+
     for (size_t i=0; i < list_length; i++) {
-        char *path = econf_getPath(key_file_list[i]);
+	char *path = econf_getPath(key_file_list[i]);
 	char **keys = NULL;
         size_t key_count = 0;
 
-	if (strlen(path) > 0 && verbose) {
+	if (verbose) {
 	    fprintf(stderr, "Evaluating: %s\n", path);
-	    free(path);	    
 	}
+	free(path);
 
         econf_error = econf_getKeys(key_file_list[i],
 				    NULL, &key_count, &keys);
@@ -211,6 +209,7 @@ int main (int argc, char *argv[])
 	    } else if (econf_error == ECONF_SUCCESS) {
 		char *token, *str, *tofree;
 		int found = 0;
+
 		tofree = str = strdup(value);
 		while ((token = strsep(&str, " \t\n")))
 			if (strcmp(token, add_value) == 0) found = 1;;
@@ -241,7 +240,7 @@ int main (int argc, char *argv[])
 		strlen(add_ext_value->comment_before_key) > 0) {
 	        if (econf_getExtValue(output_key_file, NULL, keys[k], &ext_value) == ECONF_SUCCESS) {
 		    if (ext_value->comment_before_key == NULL) {
-			ext_value->comment_before_key = strdup(add_ext_value->comment_before_key);
+		        ext_value->comment_before_key = strdup(add_ext_value->comment_before_key);
 		    } else {
 			char *new_comment = NULL;			    
 			if (asprintf(&new_comment, "%s\n%s", ext_value->comment_before_key, add_ext_value->comment_before_key) <0) {
@@ -260,8 +259,11 @@ int main (int argc, char *argv[])
 		    econf_freeExtValue(ext_value);
 		}
 	    }
+	    econf_freeExtValue(add_ext_value);
 	}
+
 	econf_free(key_file_list[i]);
+	econf_free(keys);
     }
 
     if (verbose) {
@@ -273,7 +275,7 @@ int main (int argc, char *argv[])
 	print_error(econf_error);
         ret = -1;
     }    
-    
+
  cleanup:
     free(key_file_list);
     econf_free(output_key_file);

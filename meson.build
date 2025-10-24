@@ -14,15 +14,9 @@ project('nsswitch-config', 'c',
 	meson_version : '>= 0.49.0',
 )
 man_dir = get_option('mandir')
-vendordir = get_option('vendordir')
 
 cc = meson.get_compiler('c')
 pkg = import('pkgconfig')
-
-if vendordir != ''
-add_project_arguments(['-DVENDORDIR="@0@"'.format(vendordir)],
-	 language : 'c')
-endif
 
 add_project_arguments(['-D_GNU_SOURCE=1',
 		       '-DXTSTRINGDEFINES',
