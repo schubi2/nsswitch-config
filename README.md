@@ -79,8 +79,8 @@ e.g. /etc/nsswitch.conf, the output file will NOT be parsed/merged.
 ### general OPTIONS
 
 --vendordir \<string\> :
-  Directory for vendor specific configuration files (e.g. /usr/share).
-  default: -none-
+  Directory for vendor specific configuration files.
+  default: /usr/share
 
 --etcdir \<string\> :
   Directory for user changed configuration files (default: /etc).
@@ -99,16 +99,11 @@ e.g. /etc/nsswitch.conf, the output file will NOT be parsed/merged.
 
 #### Build:
 ```
-# meson  [<MESON-OPTIONS>] <builddir>
+# meson  <builddir>
 # cd <builddir>
 # meson compile
 ```
 
-##### MESON-OPTIONS
-
--Dvendordir=\<DIR\> :
-Directory for distribution provided configuration files	(e.g. "/usr/share").
-			
 #### Installation:
 ```
 # cd <builddir>

@@ -34,15 +34,11 @@
 #define PROGRAM_NAME "nsswitch-config"
 #define COMMENT "#"
 #define DELIMITERS ":"
+#define VENDORDIR "/usr/share"
 
 static char *output_file = "/etc/nsswitch.conf"; /* output of all merged files */
 static char *etc_dir = "/etc"; /* output of all merged files */
-#ifdef VENDORDIR
-static char *vendor_dir = VENDORDIR
-#else
-static char *vendor_dir = NULL;
-#endif
-
+static char *vendor_dir = VENDORDIR;
 
 /**
  * @brief Shows the usage.
