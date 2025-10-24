@@ -13,7 +13,7 @@ jobs:
     - name: Install devel packages
       run: |
         zypper ref
-        zypper --non-interactive in --no-recommends meson gcc libeconf-devel systemd-devel sqlite3-devel audit-devel pam-devel docbook5-xsl-stylesheets valgrind
+        zypper --non-interactive in --no-recommends meson gcc libeconf-devel audit-devel valgrind
 
     - name: Setup meson
       run: meson setup build --auto-features=enabled
