@@ -26,6 +26,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <dirent.h>
+#include <stdlib.h>
 
 #include "libeconf.h"
 #include "libeconf_ext.h"
@@ -70,6 +72,70 @@ static void print_error(const econf_err error)
   fprintf(stderr, "%s (line %d): %s\n", filename, (int) line_nr,
 	  econf_errString(error));
   free(filename);
+}
+
+static int filter_backup_file(const struct dirent *entry)
+{
+   char *filter = NULL;
+   char *base_name = strdup(output_file);
+
+   if (base_name == NULL) {
+       fprintf(stderr, "Cannot allocate memory.\n");
+       return 0;
+   }
+
+   if (asprintf(&filter, "%s.nsswitch-config-sav.", basename(base_name)) <0) {
+      fprintf(stderr, "Cannot allocate memory.\n");
+      free(base_name);
+      return 0;
+   } else {
+      int ret = strncmp(filter, entry->d_name, strlen(filter)) == 0;
+      free(filter);
+      free(base_name);
+      return ret;
+   }
+}
+
+/**
+ * @brief Saving old file
+ */
+static void backup(void)
+{
+    if (access(output_file, F_OK) == 0) {
+        char *dest = NULL;
+	struct dirent **namelist;
+	char *dir_name = strdup(output_file);
+
+	if (dir_name == NULL) {
+	   fprintf(stderr, "Cannot allocate memory.\n");
+	   return;
+	}
+
+	int n = scandir(dirname(dir_name), &namelist, filter_backup_file, alphasort);
+        if (n <= 0) {
+           n = 1;
+	} else {
+	   int i = n;
+           while (i--) {
+               free(namelist[i]);
+           }
+           free(namelist);
+	   n++;
+	}
+
+	if (asprintf(&dest, "%s.nsswitch-config-sav.%d", output_file, n) <0 ) {
+	   free(dir_name);
+	   fprintf(stderr, "Cannot allocate memory.\n");
+	   return;
+	}
+
+	if (rename(output_file, dest) != 0) {
+	   fprintf(stderr, "Cannot move %s to %s\n", output_file, dest);
+	   free(dest);
+	}
+	free(dest);
+        free(dir_name);
+    }
 }
 
 int main (int argc, char *argv[])
@@ -119,25 +185,7 @@ int main (int argc, char *argv[])
         }
     }
 
-    /* Saving old file */
-    if (access(output_file, F_OK) == 0) {
-        char *dest = NULL;
-
-	if (asprintf(&dest, "%s.nsswitch-config-sav", output_file) <0) {
-	   ret = ECONF_NOMEM;
-	   print_error(econf_error);
-	   return -1;
-	}
-	if (access(dest, F_OK) == 0)
- 	   remove(dest);
-
-	if (rename(output_file, dest) != 0) {
-  	   fprintf(stderr, "Cannot move %s to %s\n", output_file, dest);
-	   free(dest);
-	   return -1;
-	}
-	free(dest);	
-    }
+    backup();
 
     econf_error = econf_newKeyFile( &output_key_file,
 				    ':', /* DELIMITERS */
