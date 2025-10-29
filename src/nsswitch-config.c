@@ -202,7 +202,7 @@ int main (int argc, char *argv[])
 
             econf_error = econf_getExtValue(key_file_list[i], NULL, keys[k], &add_ext_value);
             if (econf_error) {
-		print_error(econf_error);
+                print_error(econf_error);
                 econf_free(keys);
                 ret = -1;
 		goto cleanup;
@@ -213,7 +213,7 @@ int main (int argc, char *argv[])
 		econf_freeExtValue(add_ext_value);
                 econf_free(keys);
                 ret = -1;
-		goto cleanup;
+                goto cleanup;
             }	    
 
 	    /* adding value */
@@ -264,7 +264,7 @@ int main (int argc, char *argv[])
 			char *new_comment = NULL;			    
 			if (asprintf(&new_comment, "%s\n%s", ext_value->comment_before_key, add_ext_value->comment_before_key) <0) {
 		            ret = -1;
-			    print_error(ECONF_NOMEM);
+                            print_error(ECONF_NOMEM);
  	                    econf_freeExtValue(add_ext_value);
 			    econf_freeExtValue(ext_value);
 		            econf_free(keys);
