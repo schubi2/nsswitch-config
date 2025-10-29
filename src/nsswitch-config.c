@@ -174,9 +174,16 @@ int main (int argc, char *argv[])
     for (size_t i=0; i < list_length; i++) {
 	char *path = econf_getPath(key_file_list[i]);
 
-	if (verbose) {
-	    fprintf(stderr, "Evaluating: %s\n", path);
+	if (strcmp(path, output_file) == 0) {
+	    if (verbose)
+		fprintf(stderr, "Scipping: %s\n", path);
+	    free (path);
+	    continue;
 	}
+
+	if (verbose)
+	    fprintf(stderr, "Evaluating: %s\n", path);
+
 	free(path);
 
         econf_error = econf_getKeys(key_file_list[i],
