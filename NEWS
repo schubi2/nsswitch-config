@@ -1,3 +1,9 @@
+Version 0.0.4
+* Added comment in nsswitch.conf that it has been created
+  by nsswitch-config.
+* There is only one backup file if it has not been generated
+  by nsswitch-config.
+
 Version 0.0.3
 * Handle multiple versions of backup files.
 
