@@ -106,25 +106,23 @@ static void backup(void)
 	if (found) {
 	    if (verbose)
                 fprintf(stderr, "Do not create a backup of %s\n", output_file);
-	    return;
+	    remove(output_file);
+	} else {
+            if (asprintf(&dest, "%s.rpmsave", output_file) <0 ) {
+	        fprintf(stderr, "Cannot allocate memory.\n");
+		return;
+	    }
+
+	    if (verbose)
+                fprintf(stderr, "Creating a backup of old file: %s\n", dest);
+
+	    if (access(dest, F_OK) == 0)
+	        remove(dest);
+
+	    if (rename(output_file, dest) != 0)
+	        fprintf(stderr, "Cannot move %s to %s\n", output_file, dest);
+	    free(dest);
 	}
-
-	if (asprintf(&dest, "%s.rpmsave", output_file) <0 ) {
-	   fprintf(stderr, "Cannot allocate memory.\n");
-	   return;
-	}
-
-	if (verbose)
-            fprintf(stderr, "Creating a backup of old file: %s\n", dest);
-
-	if (access(dest, F_OK) == 0)
-	   remove(dest);
-
-	if (rename(output_file, dest) != 0) {
-	   fprintf(stderr, "Cannot move %s to %s\n", output_file, dest);
-	   free(dest);
-	}
-	free(dest);
     }
 }
 
@@ -203,13 +201,6 @@ int main (int argc, char *argv[])
 
     for (size_t i=0; i < list_length; i++) {
 	char *path = econf_getPath(key_file_list[i]);
-
-	if (strcmp(path, output_file) == 0) {
-	    if (verbose)
-		fprintf(stderr, "Scipping: %s\n", path);
-	    free (path);
-	    continue;
-	}
 
 	if (verbose)
 	    fprintf(stderr, "Evaluating: %s\n", path);
