@@ -5,4 +5,5 @@ test('tst-nsswitch2', find_program('tst-nsswitch2.sh'))
 test('tst-nsswitch3', find_program('tst-nsswitch3.sh'))
 test('tst-nsswitch4', find_program('tst-nsswitch4.sh'))
 test('tst-nsswitch5', find_program('tst-nsswitch5.sh'))
+test('tst-nsswitch6', find_program('tst-nsswitch6.sh'))
 
