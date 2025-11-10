@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Overwriting not admin created configuration file.
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then
