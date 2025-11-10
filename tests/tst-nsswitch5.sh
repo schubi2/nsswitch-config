@@ -25,7 +25,6 @@ file1=$nsswitch_config_root/etc/nsswitch.conf
 file2=$nsswitch_config_root/etc/nsswitch.cmp
 if cmp -s "$file1" "$file2"; then
     printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
-    rm $file1
     exit 0
 else
     printf 'The file "%s" is different from "%s"\n' "$file1" "$file2"
