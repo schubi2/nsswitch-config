@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Do not overwrite admin chreated file. Writing *.rpmnew instead
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then
