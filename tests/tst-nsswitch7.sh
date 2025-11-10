@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# option --force overwrites 
+# option --force overwrites admin changed nsswitch.conf
 
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
@@ -32,7 +32,7 @@ file1=$nsswitch_config_root/etc/nsswitch.conf
 file2=$nsswitch_config_root/etc/nsswitch.cmp
 if cmp -s "$file1" "$file2"; then
     printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
-    cp "$file2" "$file2"
+    git checkout "$file1"
 else
     printf 'The file "%s" is different from "%s"\n' "$file1" "$file2"    
     exit 1
