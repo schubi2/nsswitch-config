@@ -5,9 +5,9 @@
 # comment for /usr/share/nsswitch.conf.d/10-mdns.conf
 # comment for /usr/share/nsswitch.conf.d/30-dns.conf
 # comment for etc/nsswitch.conf.d/40-dns.conf (no double entry)
-hosts:mdns_minimal [NOTFOUND=return] dns
+hosts: mdns_minimal [NOTFOUND=return] dns
 # comment nr.1 for /etc/nsswitch.conf.d/20-compat.conf
 # comment nr.2 for /etc/nsswitch.conf.d/20-compat.conf
-passwd:compat
-group:compat
-shadow:compat
+passwd: compat
+group: compat
+shadow: compat
