@@ -5,7 +5,7 @@
 # comment #1 usr/share/nsswitch.conf.d/10-foo.conf/passwd
 # comment #2 usr/share/nsswitch.conf.d/10-foo.conf/passwd
 # comment #1 etc/nsswitch.conf.d/20-bar.conf/passwd
-passwd:files systemd [succcess=merge]
+passwd: files systemd [succcess=merge]
 # comment #1 usr/share/nsswitch.conf.d/10-foo.conf/group
 # comment #1 etc/nsswitch.conf.d/20-bar.conf/group
-group:dns [!UNAVAIL=return] files
+group: dns [!UNAVAIL=return] files
