@@ -16,6 +16,7 @@ https://github.com/uapi-group/specifications/blob/main/specs/configuration_files
 Files will be managed in following order:
 
 * /usr/share/nsswitch.conf
+
   Will not be regarded.
 
   Content:
@@ -25,6 +26,7 @@ Files will be managed in following order:
   ```
 
 * /usr/share/nsswitch.conf.d/10-mdns.conf
+
   Vendor defined snipped
 
   Content:
@@ -34,6 +36,7 @@ Files will be managed in following order:
   ```
 
 * /etc/nsswitch.conf.d/20-compat.conf
+
   Admin defined snipped
 
   Content:
@@ -45,6 +48,7 @@ Files will be managed in following order:
   ```
 
 * /usr/share/nsswitch.conf.d/30-dns.conf
+
   Vendor defined snipped
 
   Content:
@@ -54,6 +58,7 @@ Files will be managed in following order:
   ```
 
 * /etc/nsswitch.conf.d/40-dns.conf
+
   Admin defined snipped
 
   Content:
