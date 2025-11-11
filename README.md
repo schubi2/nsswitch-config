@@ -7,6 +7,7 @@ The program parses different configurations files with the order defined by the
 UAPI group:
 https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md
 and combines the parsed values to one single file.
+
 Only drop-ins WITHOUT main configuration file will be merged:
 https://github.com/uapi-group/specifications/blob/main/specs/configuration_files_specification.md#drop-ins-without-main-configuration-file
 
