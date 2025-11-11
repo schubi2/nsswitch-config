@@ -86,7 +86,7 @@ group:compat
 shadow:compat
 ```
 
-/etc/nsswitch.conf will be overwritten only, if it has not been created by
+/etc/nsswitch.conf will only be overwritten, if it has not been created by
 the admin. Otherwise it will be kept untouched and the results will be
 written to /etc/nsswitch.conf.rpmnew.
 
