@@ -1,6 +1,12 @@
 Version 0.0.5
 * Create a /etc/nsswitch.conf.rpmnew if a admin created /etc/nsswitch.conf
   exists.
+* New options:
+  --force :
+  Overwite output file although it has been created by the admin.
+  --admin_changed :
+  Check if the output file has been created by the admin.
+* Templates for creating nsswitch.conf  
 
 Version 0.0.4
 * Added comment in nsswitch.conf that it has been created
