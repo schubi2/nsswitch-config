@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# overwriting vendor settings by admin settings
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then
