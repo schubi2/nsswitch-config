@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Do not parse etc/nsswitch.conf and do not overwrite it.
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then
@@ -21,13 +23,13 @@ fi
 echo $nsswitch_config_exe --vendordir=$nsswitch_config_root/usr/share --etcdir=$nsswitch_config_root/etc --output=$nsswitch_config_root/etc/nsswitch.conf
 $nsswitch_config_exe --vendordir=$nsswitch_config_root/usr/share --etcdir=$nsswitch_config_root/etc --output=$nsswitch_config_root/etc/nsswitch.conf
 
-file1=$nsswitch_config_root/etc/nsswitch.conf
+file1=$nsswitch_config_root/etc/nsswitch.conf.rpmnew
 file2=$nsswitch_config_root/etc/nsswitch.cmp
 if cmp -s "$file1" "$file2"; then
     printf 'The file "%s" is the same as "%s"\n' "$file1" "$file2"
     rm $file1
-    if [ -f "$file1.rpmsave" ]; then
-        mv $file1.rpmsave $file1
+    if [ -f "$file1.rpmnew" ]; then
+        rm $file1.rpmnew
     fi
     exit 0
 else
