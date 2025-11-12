@@ -32,11 +32,11 @@
 #	wins			Use Samba wins support
 #	wrapper			Use wrapper module for testing
 #
-# Notes:
+# Notes for individual changes which have to be done by own snippeds in
+# the /etc/nsswitch.conf.d directory:
 #
 # 'sssd' performs its own 'files'-based caching, so it should generally
 # come before 'files'.
-#
 # To use 'db', install the appropriate package(s) (provide 'makedb' and
 # libnss_db.so.*)
 # Allow initgroups to default to the setting for group.
