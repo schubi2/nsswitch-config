@@ -67,7 +67,7 @@ static void print_error(const econf_err error)
 
   econf_errLocation( &filename, &line_nr);
   fprintf(stderr, "%s (line %d): %s\n", filename, (int) line_nr,
-	  econf_errString(error));
+          econf_errString(error));
   free(filename);
 }
 
@@ -151,7 +151,7 @@ int main (int argc, char *argv[])
             break;
         case 'e':
             etc_dir = optarg;
-            break;	    
+            break;
         case 'o':
             free (output_file);
             output_file = strdup(optarg);
@@ -189,25 +189,25 @@ int main (int argc, char *argv[])
     }
 
     econf_error = econf_newKeyFile( &output_key_file,
-				    ':', /* DELIMITERS */
-				    '#'  /* COMMENT */);
+                                    ':', /* DELIMITERS */
+                                    '#'  /* COMMENT */);
     if (econf_error) {
         print_error(econf_error);
         return EXIT_FAILURE;
     }    
 
     econf_error = econf_readDirsHistory( &key_file_list,
-					 &list_length,
-					 vendor_dir,
-					 etc_dir,
-					 "nsswitch",
-				         "conf",
-					 DELIMITERS,
-					 COMMENT);
+                                         &list_length,
+                                         vendor_dir,
+                                         etc_dir,
+                                         "nsswitch",
+                                         "conf",
+                                         DELIMITERS,
+                                         COMMENT);
     if (econf_error) {
         print_error(econf_error);
         ret = EXIT_FAILURE;
-        goto cleanup;	    
+        goto cleanup;
     }
 
     /* sorting double entries */
@@ -216,57 +216,57 @@ int main (int argc, char *argv[])
             char *path1 = econf_getPath(key_file_list[j]);
             char *path2 = econf_getPath(key_file_list[j+1]);
             if (strcmp(basename(path1), basename(path2)) > 0) {
-	        econf_file * tmp = key_file_list[j];
+                econf_file * tmp = key_file_list[j];
                 key_file_list[j] = key_file_list[j+1];
                 key_file_list[j+1] = tmp;
-	    }
+            }
             free(path1);
             free(path2);
         }
     }
 
     for (size_t i=0; i < list_length; i++) {
-	char *path = econf_getPath(key_file_list[i]);
+        char *path = econf_getPath(key_file_list[i]);
 
-	if (i < list_length - 1) {
-	    /* Checking if the next entry have the same basename */
-	    /* Ignore that one and take the next one             */
-	    char *next_path = econf_getPath(key_file_list[i+1]);
-	    if (strcmp(basename(path), basename(next_path)) == 0) {
+        if (i < list_length - 1) {
+            /* Checking if the next entry have the same basename */
+            /* Ignore that one and take the next one             */
+            char *next_path = econf_getPath(key_file_list[i+1]);
+            if (strcmp(basename(path), basename(next_path)) == 0) {
                 if (verbose)
                     fprintf(stderr, "Skipping: %s\n", path);
                 continue;
-	    }
-	}
-
-	if (strcmp(path, output_file) == 0 ||
-	    strcmp(path, etc_main_file) == 0 ||
-	    strcmp(path, usr_main_file) == 0) {
-	    if (verbose)
-	        fprintf(stderr, "Skipping: %s\n", path);
-	    continue;
-	}
-
-	if (verbose)
-	    fprintf(stderr, "Evaluating: %s\n", path);
-
-	free(path);
-
-	econf_error = econf_getKeys(key_file_list[i],
-				    NULL, &key_count, &keys);
-	if (econf_error && econf_error != ECONF_NOKEY) {
-            print_error(econf_error);
-            ret = EXIT_FAILURE;
-            goto cleanup;	    
+            }
         }
 
-	for (size_t k = 0; k < key_count; k++) {
-	    econf_ext_value *add_ext_value = NULL;	    
-	    char *value = NULL;
-	    char *add_value = NULL;
+        if (strcmp(path, output_file) == 0 ||
+            strcmp(path, etc_main_file) == 0 ||
+            strcmp(path, usr_main_file) == 0) {
+            if (verbose)
+                fprintf(stderr, "Skipping: %s\n", path);
+            continue;
+        }
 
-	    econf_error = econf_getExtValue(key_file_list[i], NULL, keys[k], &add_ext_value);
-	    if (econf_error) {
+        if (verbose)
+            fprintf(stderr, "Evaluating: %s\n", path);
+
+        free(path);
+
+        econf_error = econf_getKeys(key_file_list[i],
+                                    NULL, &key_count, &keys);
+        if (econf_error && econf_error != ECONF_NOKEY) {
+            print_error(econf_error);
+            ret = EXIT_FAILURE;
+            goto cleanup;
+        }
+
+        for (size_t k = 0; k < key_count; k++) {
+            econf_ext_value *add_ext_value = NULL;
+            char *value = NULL;
+            char *add_value = NULL;
+
+            econf_error = econf_getExtValue(key_file_list[i], NULL, keys[k], &add_ext_value);
+            if (econf_error) {
                 print_error(econf_error);
                 econf_free(keys);
                 ret = EXIT_FAILURE;
@@ -281,95 +281,95 @@ int main (int argc, char *argv[])
                 goto cleanup;
             }
 
-	    /* adding value */
+            /* adding value */
             econf_error = econf_getStringValue(output_key_file, NULL, keys[k], &value);
             if (econf_error == ECONF_NOKEY || value == NULL || strlen(value) == 0) {
                 /* new entry */
-		char *new_value = NULL;
-		if (asprintf(&new_value, "%s%s", add_value != NULL ? " " : "", add_value != NULL ? add_value : "") <0) {
-		      fprintf(stderr, "Cannot allocate memory.\n");
-		      ret = EXIT_FAILURE;
-		      free(value);
-		      free(add_value);
-		      econf_freeExtValue(add_ext_value);
-		      econf_free(keys);
-		      goto cleanup;
-		}
-	        econf_error = econf_setStringValue(output_key_file, NULL, keys[k], new_value);
-		free(new_value);
-	    } else if (econf_error == ECONF_SUCCESS) {
+                char *new_value = NULL;
+                if (asprintf(&new_value, "%s%s", add_value != NULL ? " " : "", add_value != NULL ? add_value : "") <0) {
+                      fprintf(stderr, "Cannot allocate memory.\n");
+                      ret = EXIT_FAILURE;
+                      free(value);
+                      free(add_value);
+                      econf_freeExtValue(add_ext_value);
+                      econf_free(keys);
+                      goto cleanup;
+                }
+                econf_error = econf_setStringValue(output_key_file, NULL, keys[k], new_value);
+                free(new_value);
+            } else if (econf_error == ECONF_SUCCESS) {
                 /* appending entry */
-		char *token, *str, *tofree;
-		int found = 0;
+                char *token, *str, *tofree;
+                int found = 0;
 
-		tofree = str = strdup(value);
-		while ((token = strsep(&str, " \t\n")))
-			if (strcmp(token, add_value) == 0) found = 1;;
-		free(tofree);
+                tofree = str = strdup(value);
+                while ((token = strsep(&str, " \t\n")))
+                        if (strcmp(token, add_value) == 0) found = 1;;
+                free(tofree);
 
-	        if (found == 0) {
-		   /* value is not in list */
-		   char *new_value = NULL;
-		   if (asprintf(&new_value, "%s %s", value, add_value) <0) {
-		      fprintf(stderr, "Cannot allocate memory.\n");
-		      ret = EXIT_FAILURE;
-		      free(value);
-		      free(add_value);
-		      econf_freeExtValue(add_ext_value);
-		      econf_free(keys);
-		      goto cleanup;
-		   }
-		   econf_error = econf_setStringValue(output_key_file, NULL, keys[k], new_value);
-		   free(new_value);
-		}
-	    }
-	    free(value);
-	    free(add_value);
-	    if (econf_error != ECONF_SUCCESS) {
-	        print_error(econf_error);
-	        ret = EXIT_FAILURE;
-		goto cleanup;
-	    }
+                if (found == 0) {
+                   /* value is not in list */
+                   char *new_value = NULL;
+                   if (asprintf(&new_value, "%s %s", value, add_value) <0) {
+                      fprintf(stderr, "Cannot allocate memory.\n");
+                      ret = EXIT_FAILURE;
+                      free(value);
+                      free(add_value);
+                      econf_freeExtValue(add_ext_value);
+                      econf_free(keys);
+                      goto cleanup;
+                   }
+                   econf_error = econf_setStringValue(output_key_file, NULL, keys[k], new_value);
+                   free(new_value);
+                }
+            }
+            free(value);
+            free(add_value);
+            if (econf_error != ECONF_SUCCESS) {
+                print_error(econf_error);
+                ret = EXIT_FAILURE;
+                goto cleanup;
+            }
 
-	    /* adding comments */
-	    if (econf_error == ECONF_SUCCESS &&
-		add_ext_value->comment_before_key != NULL &&
-		strlen(add_ext_value->comment_before_key) > 0) {
-	        if (econf_getExtValue(output_key_file, NULL, keys[k], &ext_value) == ECONF_SUCCESS) {
-		    if (ext_value->comment_before_key == NULL) {
-		        ext_value->comment_before_key = strdup(add_ext_value->comment_before_key);
-		    } else {
-			char *new_comment = NULL;			    
-			if (asprintf(&new_comment, "%s\n%s", ext_value->comment_before_key, add_ext_value->comment_before_key) <0) {
-		            ret = EXIT_FAILURE;
-			    fprintf(stderr, "Cannot allocate memory.\n");
- 	                    econf_freeExtValue(add_ext_value);
-			    econf_freeExtValue(ext_value);
-		            econf_free(keys);
-		            goto cleanup;
-			} else {
-			    free(ext_value->comment_before_key);
-			    ext_value->comment_before_key = new_comment;
-			}
-		    }
-		    econf_error = econf_setExtValue(output_key_file, NULL, keys[k], ext_value);
-		    econf_freeExtValue(ext_value);
-		}
-	    }
-	    econf_freeExtValue(add_ext_value);
-	}
-	econf_free(key_file_list[i]);
+            /* adding comments */
+            if (econf_error == ECONF_SUCCESS &&
+                add_ext_value->comment_before_key != NULL &&
+                strlen(add_ext_value->comment_before_key) > 0) {
+                if (econf_getExtValue(output_key_file, NULL, keys[k], &ext_value) == ECONF_SUCCESS) {
+                    if (ext_value->comment_before_key == NULL) {
+                        ext_value->comment_before_key = strdup(add_ext_value->comment_before_key);
+                    } else {
+                        char *new_comment = NULL;
+                        if (asprintf(&new_comment, "%s\n%s", ext_value->comment_before_key, add_ext_value->comment_before_key) <0) {
+                            ret = EXIT_FAILURE;
+                            fprintf(stderr, "Cannot allocate memory.\n");
+                            econf_freeExtValue(add_ext_value);
+                            econf_freeExtValue(ext_value);
+                            econf_free(keys);
+                            goto cleanup;
+                        } else {
+                            free(ext_value->comment_before_key);
+                            ext_value->comment_before_key = new_comment;
+                        }
+                    }
+                    econf_error = econf_setExtValue(output_key_file, NULL, keys[k], ext_value);
+                    econf_freeExtValue(ext_value);
+                }
+            }
+            econf_freeExtValue(add_ext_value);
+        }
+        econf_free(key_file_list[i]);
         if (key_count > 0)
             econf_free(keys);
     }
 
     /* Writing comment that the output file has been generated by nsswitch-config */
     econf_error = econf_getKeys(output_key_file,
-				NULL, &key_count, &keys);
+                                NULL, &key_count, &keys);
     if (econf_error) {
-	print_error(econf_error);
-	ret = EXIT_FAILURE;
-	goto cleanup;
+        print_error(econf_error);
+        ret = EXIT_FAILURE;
+        goto cleanup;
     }
 
     if (key_count > 1 &&
@@ -378,52 +378,52 @@ int main (int argc, char *argv[])
        if (ext_value->comment_before_key == NULL ||
            strstr(ext_value->comment_before_key, HEADERCOMMENT) == NULL) {
 
-	   char *new_comment = NULL;
-	   if (asprintf(&new_comment,
-			" %s\n Changes can be done with single snippets, stored in <etc_dir>/nsswitch.conf.d/"\
-			"<snipped_name>\n This file will not be overwritten if the comments above are removed.\n\n%s",
-			HEADERCOMMENT, ext_value->comment_before_key ? ext_value->comment_before_key : "") <0 ) {
+           char *new_comment = NULL;
+           if (asprintf(&new_comment,
+                        " %s\n Changes can be done with single snippets, stored in <etc_dir>/nsswitch.conf.d/"\
+                        "<snipped_name>\n This file will not be overwritten if the comments above are removed.\n\n%s",
+                        HEADERCOMMENT, ext_value->comment_before_key ? ext_value->comment_before_key : "") <0 ) {
               ret = EXIT_FAILURE;
-	      fprintf(stderr, "Cannot allocate memory.\n");
-	      econf_freeExtValue(ext_value);
-	      econf_free(keys);
-	      goto cleanup;
+              fprintf(stderr, "Cannot allocate memory.\n");
+              econf_freeExtValue(ext_value);
+              econf_free(keys);
+              goto cleanup;
             } else {
-	       free(ext_value->comment_before_key);
-	       ext_value->comment_before_key = new_comment;
+               free(ext_value->comment_before_key);
+               ext_value->comment_before_key = new_comment;
             }
 
-	    econf_error = econf_setExtValue(output_key_file, NULL, keys[0], ext_value);
-	    econf_freeExtValue(ext_value);
-	    if (econf_error) {
-	       print_error(econf_error);
-	       econf_free(keys);
-	       ret = EXIT_FAILURE;
-	       goto cleanup;
-	    }
+            econf_error = econf_setExtValue(output_key_file, NULL, keys[0], ext_value);
+            econf_freeExtValue(ext_value);
+            if (econf_error) {
+               print_error(econf_error);
+               econf_free(keys);
+               ret = EXIT_FAILURE;
+               goto cleanup;
+            }
         }
     }
     econf_free(keys);
 
     if (user_changed_file(output_file) && !force) {
-	char *dest = NULL;
+        char *dest = NULL;
 
-	if (asprintf(&dest, "%s.rpmnew", output_file) <0 ) {
-	    fprintf(stderr, "Cannot allocate memory.\n");
-	    ret = EXIT_FAILURE;
-	    goto cleanup;
-	}
-	free (output_file);
-	output_file = dest;
+        if (asprintf(&dest, "%s.rpmnew", output_file) <0 ) {
+            fprintf(stderr, "Cannot allocate memory.\n");
+            ret = EXIT_FAILURE;
+            goto cleanup;
+        }
+        free (output_file);
+        output_file = dest;
     }
 
     if (verbose) {
-	fprintf(stderr, "Writing: %s\n", output_file);
+        fprintf(stderr, "Writing: %s\n", output_file);
     }
 
     econf_error = econf_writeFile(output_key_file, dirname(output_file), basename(output_file));
     if (econf_error) {
-	print_error(econf_error);
+        print_error(econf_error);
         ret = EXIT_FAILURE;
     }    
 
