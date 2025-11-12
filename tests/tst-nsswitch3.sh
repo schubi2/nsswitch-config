@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Do not parse etc/nsswitch.conf and do not overwrite it.
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then

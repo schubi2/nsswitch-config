@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# No double entry
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then

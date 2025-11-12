@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Checking file ordering in usr and etc
+
 nsswitch_config_exe="$PWD/../nsswitch-config"
 
 if ! [[ -f "$nsswitch-config_exe" ]]; then
