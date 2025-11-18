@@ -20,8 +20,8 @@ if ! [[ -d "$nsswitch_config_root" ]]; then
     fi
 fi
 
-echo $nsswitch_config_exe --etcdir=$nsswitch_config_root/etc --output=$nsswitch_config_root/nsswitch.cmp
-$nsswitch_config_exe --etcdir=$nsswitch_config_root/etc --output=$nsswitch_config_root/nsswitch.cmp
+echo $nsswitch_config_exe --etcdir=$nsswitch_config_root/etc --vendordir=$nsswitch_config_root/usr/share --output=$nsswitch_config_root/nsswitch.cmp
+$nsswitch_config_exe --etcdir=$nsswitch_config_root/etc --vendordir=$nsswitch_config_root/usr/share --output=$nsswitch_config_root/nsswitch.cmp
 
 file1=$nsswitch_config_root/nsswitch.cmp
 file2=$nsswitch_config_root/nsswitch.out

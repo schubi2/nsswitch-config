@@ -163,10 +163,13 @@ int main (int argc, char *argv[])
             force = 1;
             break;
         case 'a':
-            if (user_changed_file(output_file))
+            if (user_changed_file(output_file)) {
+                fprintf(stderr, "true\n");
                 return EXIT_SUCCESS;
-            else
+            } else {
+                fprintf(stderr, "false\n");
                 return EXIT_FAILURE;
+	    }
         case 'h':
             usage();
             return EXIT_SUCCESS;
@@ -297,7 +300,7 @@ int main (int argc, char *argv[])
                 }
                 econf_error = econf_setStringValue(output_key_file, NULL, keys[k], new_value);
                 free(new_value);
-            } else if (econf_error == ECONF_SUCCESS) {
+            } else if (econf_error == ECONF_SUCCESS && add_value != NULL && strlen(add_value) != 0) {
                 /* appending entry */
                 char *token, *str, *tofree;
                 int found = 0;

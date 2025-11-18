@@ -1,4 +1,8 @@
 Version 0.0.5
+* --admin_changed: Showing more information.
+* Fix: Crash while parsing empty values.
+
+Version 0.0.5
 * Create a /etc/nsswitch.conf.rpmnew if a admin created /etc/nsswitch.conf
   exists.
 * New options:
