@@ -1,5 +1,5 @@
 project('nsswitch-config', 'c',
-	version : '0.0.6',
+	version : '0.0.7',
 	license : 'LGPLv2.1+',
 	default_options : [
 		'buildtype=debugoptimized',
